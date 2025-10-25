@@ -1,0 +1,49 @@
+- name: News
+  sources:
+  - feeds:
+    - url: https://www.youtube.com/@TLDRbusiness
+    - url: https://www.youtube.com/@TLDRdaily
+    - url: https://www.youtube.com/@TLDRnews
+    - url: https://www.youtube.com/@TLDRnewsEU
+    - url: https://www.youtube.com/@TLDRnewsGLOBAL
+    - url: https://www.youtube.com/@TLDRnewsUS
+  - feeds:
+    - url: https://www.youtube.com/@UNESCO
+      allowed_languages:
+      - en
+- name: Computer science and programming
+  sources:
+  - feeds:
+    - url: https://blog.unicode.org/feeds/posts/default?alt=rss
+      summarise: true
+  - feeds:
+    - url: https://gavindou.ch/blog/feed.rss
+  - feeds:
+    - url: https://github.com/micropython/micropython/releases.atom
+  - feeds:
+    - url: https://www.youtube.com/@CodeAesthetic
+  - feeds:
+    - url: https://www.youtube.com/@Computerphile
+  - feeds:
+    - url: https://www.youtube.com/@NoBoilerplate
+  - feeds:
+    - url: https://www.youtube.com/@RobertMilesAI
+- name: Tech products
+  sources:
+  - feeds:
+    - url: https://flipboard.com/@appadvice/apps-gone-free-2d9esj3dz.rss
+      description: AppAdvice Apps Gone Free
+  - feeds:
+    - url: https://github.blog/engineering.atom
+    - url: https://www.youtube.com/@GitHub
+      blacklist_regex: Rubber Duck Thursdays?|Open Source Friday
+      allowed_languages:
+      - en
+  - feeds:
+    - url: https://www.raspberrypi.com/news/feed/
+    - url: https://www.reddit.com/r/raspberry_pi/top.rss?t=month
+- name: Music
+  sources:
+  - feeds:
+    - url: https://www.youtube.com/@Flume
+      whitelist_regex: Official Music Video

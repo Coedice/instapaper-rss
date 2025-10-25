@@ -1,0 +1,22 @@
+[project]
+name = "instapaper-rss"
+version = "0.1.0"
+description = "Subscribe to RSS feeds, saved to Instapaper."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "langdetect>=1.0.9",
+    "lxml>=6.0.0",
+    "lxml-html-clean>=0.4.2",
+    "python-dateutil>=2.9.0.post0",
+    "pyyaml>=6.0.2",
+    "requests>=2.32.4",
+    "rich>=14.1.0",
+]
+
+[tool.ruff]
+# Optional: tune ruff for the project
+line-length = 88

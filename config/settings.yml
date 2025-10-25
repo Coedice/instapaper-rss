@@ -1,0 +1,3 @@
+testing_mode: false
+frequent_feed_threshold: 4
+max_skips: 5
