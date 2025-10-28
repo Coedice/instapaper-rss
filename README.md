@@ -34,7 +34,7 @@ The application reads configuration values from `config/settings.yml`. The follo
 A reccomended way to use this tool:
 
 1. Set up an internet-connected always-on computer (such as a Raspberry Pi)
-2. Unstall `uv` on that computer
+2. Install `uv` on that computer
 3. Update `REMOTE_LOGIN_IDENTIFIER` and `REMOTE_PATH` in the `Makefile` to your choice
 4. Run command `make deploy`
 5. Add crontab `0 6-21 * * * cd /home/pi/Documents/instapaper-rss && PATH="/home/pi/.local/bin:$PATH" make run > /home/pi/log.txt 2>&1`
