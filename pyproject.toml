@@ -17,6 +17,12 @@ dependencies = [
     "rich>=14.1.0",
 ]
 
+[dependency-groups]
+dev = [
+    "isort>=5.13.2",
+    "ruff>=0.8.4",
+]
+
 [tool.ruff]
 # Optional: tune ruff for the project
 line-length = 88

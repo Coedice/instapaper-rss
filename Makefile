@@ -40,8 +40,8 @@ save: ## Save updated sources.yml to git repository
 
 format: ## Format code and sources.yml
 	uv run python source_format.py
-	isort .
-	ruff format
+	uv run isort .
+	uv run ruff format
 
 .PHONY: clean
 clean: ## Clean up temporary files
