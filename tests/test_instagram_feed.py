@@ -1,32 +1,9 @@
 import json
-import os
-import tempfile
 
 import Feed as Feed_mod
 import request as request_mod
 from Feed import Feed, current_unix_time
 from PickleDictionary import PickleDictionary
-
-TEST_FILES = []
-
-
-def teardown_module(module):
-    # Clean up temporary test pickle files
-    for test_file in TEST_FILES:
-        file_path = f"pickles/{test_file}"
-        if os.path.exists(file_path):
-            os.remove(file_path)
-
-
-def _get_temp_filename():
-    """Generate a unique temporary filename for test pickles"""
-    os.makedirs("pickles", exist_ok=True)
-    fd, temp_path = tempfile.mkstemp(suffix=".dat", dir="pickles", prefix="test_")
-    os.close(fd)
-    os.remove(temp_path)  # Remove the file, just use the name
-    filename = os.path.basename(temp_path)
-    TEST_FILES.append(filename)
-    return filename
 
 
 class DummyResponse:
@@ -41,7 +18,7 @@ class DummyResponse:
         self.request = Req()
 
 
-def test_instagram_profile_entries(monkeypatch):
+def test_instagram_profile_entries(monkeypatch, temp_pickle_files):
     now = current_unix_time()
     profile_data = {
         "graphql": {
@@ -77,9 +54,9 @@ def test_instagram_profile_entries(monkeypatch):
     monkeypatch.setattr(Feed_mod, "request", fake_request)
 
     feed_item = {"url": "https://www.instagram.com/example"}
-    rss_urls = PickleDictionary(_get_temp_filename())
-    last_times = PickleDictionary(_get_temp_filename())
-    monthly = PickleDictionary(_get_temp_filename())
+    rss_urls = PickleDictionary(temp_pickle_files())
+    last_times = PickleDictionary(temp_pickle_files())
+    monthly = PickleDictionary(temp_pickle_files())
 
     rss_urls[feed_item["url"]] = feed_item["url"]
     last_times[feed_item["url"]] = 0

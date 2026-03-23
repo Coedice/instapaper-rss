@@ -1,0 +1,23 @@
+high:
+  check_every: 1
+  time_ranges:
+    - days: [mon, tue, wed, thu, fri, sat, sun]
+      start: "00:00"
+      end: "23:59"
+
+normal:
+  check_every: 3
+  time_ranges:
+    - days: [mon, tue, wed, thu, fri]
+      start: "15:30"
+      end: "22:30"
+    - days: [sat, sun]
+      start: "00:00"
+      end: "22:30"
+
+low:
+  check_every: 3
+  time_ranges:
+    - days: [mon, tue, wed, thu, fri, sat, sun]
+      start: "18:00"
+      end: "22:30"

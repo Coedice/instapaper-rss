@@ -10,6 +10,7 @@
     - url: https://www.youtube.com/@TLDRbusiness
     - url: https://www.youtube.com/@TLDRdaily
     - url: https://www.youtube.com/@TLDRnews
+      priority: high
     - url: https://www.youtube.com/@TLDRnewsEU
     - url: https://www.youtube.com/@TLDRnewsGLOBAL
     - url: https://www.youtube.com/@TLDRnewsUS
@@ -40,6 +41,7 @@
   - feeds:
     - url: https://flipboard.com/@appadvice/apps-gone-free-2d9esj3dz.rss
       description: AppAdvice Apps Gone Free
+      priority: low
   - feeds:
     - url: https://github.blog/engineering.atom
     - url: https://www.youtube.com/@GitHub
@@ -62,3 +64,4 @@
   sources:
   - feeds:
     - url: https://lorem-rss.herokuapp.com/feed
+      priority: high

@@ -1,3 +1,3 @@
-summarise: "https://www.perplexity.ai/search/?q=Summarise%20the%20following%20website%20in%20dot%20points%2C%20with%20a%20link%20afterwards%20to%20the%20website.%0A%0A{url}"
+summarise: "https://www.perplexity.ai/search/?q=Summarise%20the%20following%20website%20in%20one%20sentence%2C%20with%20a%20link%20afterwards%20to%20the%20website.%0A%0A{url}"
 archive: "https://archive.is/o/aaaaa/{url}"
 en_translate: "https://translate.google.com/translate?u={url}&sl=auto&tl=en"

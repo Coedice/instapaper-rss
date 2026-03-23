@@ -5,9 +5,10 @@ import yaml
 FIELD_ORDER = [
     "url",
     "description",
+    "priority",
+    "wrappers",
     "whitelist_regex",
     "blacklist_regex",
-    "wrappers",
     "allowed_languages",
 ]
 

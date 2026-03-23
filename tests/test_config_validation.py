@@ -5,6 +5,7 @@ import yaml
 VALID_KEYS = {
     "url",
     "description",
+    "priority",
     "wrappers",
     "blacklist_regex",
     "whitelist_regex",
@@ -28,9 +29,61 @@ def test_sources_yaml_structure_and_constraints():
         categories = yaml.safe_load(f)
     with open("config/wrappers.yml", "r") as f:
         wrappers = yaml.safe_load(f)
+    with open("config/settings.yml", "r") as f:
+        settings = yaml.safe_load(f)
+    with open("config/priorities.yml", "r") as f:
+        priorities = yaml.safe_load(f)
 
     assert isinstance(categories, list), "config/sources.yml must be a list"
     assert isinstance(wrappers, dict), "config/wrappers.yml must be a mapping"
+    assert isinstance(settings, dict), "config/settings.yml must be a mapping"
+    assert isinstance(priorities, dict), "config/priorities.yml must be a mapping"
+    assert settings.get("default_priority") in priorities, (
+        "default_priority in config/settings.yml must exist in config/priorities.yml"
+    )
+
+    for priority_name, rules in priorities.items():
+        assert isinstance(rules, dict), (
+            f"Priority '{priority_name}' in config/priorities.yml must be a mapping"
+        )
+        assert isinstance(rules.get("check_every"), int), (
+            f"Priority '{priority_name}' must define an integer check_every"
+        )
+        assert rules["check_every"] > 0, (
+            f"Priority '{priority_name}' check_every must be positive"
+        )
+
+        if "time_ranges" in rules:
+            assert isinstance(rules["time_ranges"], list), (
+                f"Priority '{priority_name}' time_ranges must be a list"
+            )
+            for time_range in rules["time_ranges"]:
+                assert isinstance(time_range, dict), (
+                    f"Priority '{priority_name}' time_ranges must contain mappings"
+                )
+                assert "start" in time_range and "end" in time_range, (
+                    f"Priority '{priority_name}' time ranges must define start and end"
+                )
+                assert isinstance(time_range["start"], str), (
+                    f"Priority '{priority_name}' time range start must be a string"
+                )
+                assert isinstance(time_range["end"], str), (
+                    f"Priority '{priority_name}' time range end must be a string"
+                )
+
+                assert "days" in time_range, (
+                    f"Priority '{priority_name}' time ranges must define days"
+                )
+                assert isinstance(time_range["days"], list), (
+                    f"Priority '{priority_name}' time range days must be a list"
+                )
+                assert len(time_range["days"]) > 0, (
+                    f"Priority '{priority_name}' time range days must not be empty"
+                )
+                for day_name in time_range["days"]:
+                    assert isinstance(day_name, str), (
+                        f"Priority '{priority_name}' time range days must contain strings"
+                    )
 
     seen_urls = set()
     for category in categories:
@@ -61,3 +114,11 @@ def test_sources_yaml_structure_and_constraints():
                         assert name in wrappers, (
                             f"Wrapper '{name}' is not defined in config/wrappers.yml"
                         )
+
+                if "priority" in feed:
+                    assert isinstance(feed["priority"], str), (
+                        f"priority must be a string for feed {url}"
+                    )
+                    assert feed["priority"] in priorities, (
+                        f"Priority '{feed['priority']}' is not defined in config/priorities.yml"
+                    )
