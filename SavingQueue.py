@@ -1,6 +1,5 @@
+import json
 import os
-import re
-import urllib.parse
 from typing import List
 
 import yaml
@@ -9,7 +8,8 @@ from rich.progress import track
 from Entry import Entry
 from request import request
 
-COOKIE_PROBLEM_PAGE_URL = "https://www.instapaper.com/hello2?u=https%3A%2F%2Fexample.com&s=&cookie_notice=1&a=%20read-later"
+SESSION_URL = "https://www.instapaper.com/data/user_session"
+CREATE_URL = "https://www.instapaper.com/data/bookmarks/create"
 
 
 class SavingQueue:
@@ -48,27 +48,31 @@ class SavingQueue:
         self._cookies = cookies
 
     def _get_form_key(self) -> None:
-        cookie_problem_page = request(
-            COOKIE_PROBLEM_PAGE_URL, cookies=self._cookies
-        ).text
-        start_index = re.search(
-            '<input type="hidden" name="form_key" value="', cookie_problem_page
-        ).end()
-        end_index = (
-            re.search('"/>', cookie_problem_page[start_index:]).start() + start_index
-        )
-        self._form_key = cookie_problem_page[start_index:end_index]
+        headers = {"X-Requested-With": "XMLHttpRequest"}
+        response = request(SESSION_URL, headers=headers, cookies=self._cookies)
+        data = json.loads(response.text)
+        self._form_key = data["user"]["form_key"]
 
     def save_entries(self) -> None:
         self._sort_entries()
+
+        headers = {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-Form-Key": self._form_key,
+        }
 
         for entry in track(self._entries, description="[bold green]Saving entries..."):
             if self._testing_mode:
                 print(f"Would have saved {entry.url}")
                 continue
 
-            instapaper_url = f"https://www.instapaper.com/add?url={urllib.parse.quote(entry.url)}&form_key={self._form_key}"
-            instapaper_request = request(instapaper_url, cookies=self._cookies)
+            response = request(
+                CREATE_URL,
+                method="POST",
+                headers=headers,
+                cookies=self._cookies,
+                data={"url": entry.url},
+            )
 
-            if instapaper_request.status_code // 100 != 2:
+            if response.status_code // 100 != 2:
                 print(f"Instapaper save link failed: {entry.url}")
