@@ -3,6 +3,7 @@ import json
 import Feed as Feed_mod
 import request as request_mod
 from Feed import Feed, current_unix_time
+from Notifier import Notifier
 from PickleDictionary import PickleDictionary
 
 
@@ -61,7 +62,9 @@ def test_instagram_profile_entries(monkeypatch, temp_pickle_files):
     rss_urls[feed_item["url"]] = feed_item["url"]
     last_times[feed_item["url"]] = 0
 
-    feed = Feed(feed_item, rss_urls, last_times, monthly, wrappers={})
+    feed = Feed(
+        feed_item, rss_urls, last_times, monthly, wrappers={}, notifier=Notifier()
+    )
 
     class SimpleQueue:
         def __init__(self):

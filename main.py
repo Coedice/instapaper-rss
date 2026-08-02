@@ -9,6 +9,7 @@ from rich import print as rprint
 from rich.progress import track
 
 from Feed import Feed
+from Notifier import Notifier
 from PickleDictionary import PickleDictionary
 from SavingQueue import SavingQueue
 
@@ -34,6 +35,7 @@ if not isinstance(_wrappers, dict):
 TESTING_MODE = _settings.get("testing_mode")
 DEFAULT_PRIORITY = _settings.get("default_priority", "normal")
 LOCK_FILE = ".running.lock"
+NOTIFIER = Notifier.from_settings(_settings)
 
 DAY_NAME_TO_INDEX = {
     "mon": 0,
@@ -235,8 +237,9 @@ def process_feed_list(
     wrappers: dict[str, str],
     priorities: dict[str, dict[str, Any]],
     default_priority: str,
+    notifier: Notifier,
 ) -> None:
-    saving_queue = SavingQueue(TESTING_MODE)
+    saving_queue = SavingQueue(TESTING_MODE, notifier)
 
     for feed_item in track(feed_list, description="[bold green]Processing feeds..."):
         feed_url = feed_item["url"]
@@ -249,7 +252,9 @@ def process_feed_list(
             continue
 
         # Process feed
-        feed = Feed(feed_item, rss_urls, last_saved_times, monthly_entries, wrappers)
+        feed = Feed(
+            feed_item, rss_urls, last_saved_times, monthly_entries, wrappers, notifier
+        )
         feed.process_feed(saving_queue)
         rprint("  [green]Processed[/green]")
 
@@ -283,6 +288,7 @@ def main() -> None:
         _wrappers,
         _priorities,
         DEFAULT_PRIORITY,
+        NOTIFIER,
     )
 
     # Pickle data
@@ -305,6 +311,9 @@ if __name__ == "__main__":
             f.write(str(os.getpid()))
 
         main()
+    except Exception as e:
+        NOTIFIER.notify_error(f"Instapaper RSS run failed: {e}")
+        raise
     finally:
         # Clean up lock file
         if os.path.exists(LOCK_FILE):
