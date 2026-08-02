@@ -1,2 +1,8 @@
 testing_mode: false
 default_priority: normal
+
+# Optional: send error notifications to an ntfy topic.
+# Omit this section (or either key) to disable notifications.
+# ntfy:
+#   host: ntfy.sh
+#   topic: my-topic

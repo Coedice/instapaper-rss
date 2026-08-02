@@ -38,6 +38,17 @@ The application reads configuration values from `config/settings.yml`. The follo
 
 - `testing_mode`: When true the program will not actually save entries to Instapaper; it will only print what it would do. Useful for development and testing.
 - `default_priority`: Priority name to use for feeds that do not set `priority` explicitly in `config/sources.yml`.
+- `ntfy`: Optional mapping with `host` and `topic` keys. When both are set, error notifications (feed fetch failures, Instagram failures, Instapaper save failures, and unhandled crashes) are sent to the given ntfy topic. Both keys are optional — omit the whole section to disable notifications.
+
+Example:
+
+```yaml
+testing_mode: false
+default_priority: normal
+ntfy:
+  host: ntfy.sh
+  topic: my-errors
+```
 
 Priority rules are defined in `config/priorities.yml`. Each priority is a mapping with:
 

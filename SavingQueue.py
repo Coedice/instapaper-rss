@@ -6,6 +6,7 @@ import yaml
 from rich.progress import track
 
 from Entry import Entry
+from Notifier import Notifier
 from request import request
 
 SESSION_URL = "https://www.instapaper.com/data/user_session"
@@ -13,9 +14,10 @@ CREATE_URL = "https://www.instapaper.com/data/bookmarks/create"
 
 
 class SavingQueue:
-    def __init__(self, testing_mode: bool) -> None:
+    def __init__(self, testing_mode: bool, notifier: Notifier) -> None:
         self._entries: List[Entry] = []
         self._testing_mode = testing_mode
+        self._notifier = notifier
         self._get_cookies()
         self._get_form_key()
 
@@ -76,3 +78,4 @@ class SavingQueue:
 
             if response.status_code // 100 != 2:
                 print(f"Instapaper save link failed: {entry.url}")
+                self._notifier.notify_error(f"Instapaper save link failed: {entry.url}")

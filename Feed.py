@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 from langdetect import detect
 
 from Entry import Entry
+from Notifier import Notifier
 from PickleDictionary import PickleDictionary
 from request import request
 from SavingQueue import SavingQueue
@@ -38,12 +39,14 @@ class Feed:
         last_saved_times: PickleDictionary,
         monthly_entries: PickleDictionary,
         wrappers: dict[str, str],
+        notifier: Notifier,
     ) -> None:
         self._feed_url = feed_item["url"]
         self._rss_url = self._get_rss_url(rss_urls)
         self._last_saved_time = self._get_last_saved_time(last_saved_times)
         self._last_saved_times = last_saved_times
         self._monthly_entries = monthly_entries
+        self._notifier = notifier
         self._blacklist_regex = None
         self._whitelist_regex = None
         self._allowed_languages = None
@@ -118,6 +121,9 @@ class Feed:
             rss_link = request(self._rss_url, headers=self._HEADERS)
         except Exception as e:
             print(f"Error {e} while processing feed {self._feed_url}. Skipped feed.")
+            self._notifier.notify_error(
+                f"Error {e} while processing feed {self._feed_url}"
+            )
             return
 
         # Parse RSS
@@ -181,6 +187,9 @@ class Feed:
         if payload is None:
             print(
                 f"Instagram feed for {self._feed_url} returned invalid JSON. Skipped feed."
+            )
+            self._notifier.notify_error(
+                f"Instagram feed for {self._feed_url} returned invalid JSON"
             )
             return []
 

@@ -1,6 +1,7 @@
 import Feed as Feed_mod
 import request as request_mod
 from Feed import Feed
+from Notifier import Notifier
 from PickleDictionary import PickleDictionary
 
 
@@ -60,7 +61,9 @@ def test_feed_processes_entries_and_updates_time(monkeypatch, temp_pickle_files)
     rss_urls["https://example.com"] = "https://example.com/feed.xml"
     # Ensure last_saved_time is in the past so items enqueue
     last_times["https://example.com"] = 0
-    feed = Feed(feed_item, rss_urls, last_times, monthly, wrappers={})
+    feed = Feed(
+        feed_item, rss_urls, last_times, monthly, wrappers={}, notifier=Notifier()
+    )
 
     class SimpleQueue:
         def __init__(self):
